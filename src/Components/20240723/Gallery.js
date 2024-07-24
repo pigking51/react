@@ -132,6 +132,7 @@ const Content = styled.p`
 
 export function Gallery() {
   const [index, changeIndex] = useState(0);
+  const [detailON, setDetailOn] = useState(false);
 
   function prevIndex() {
     if (index === 0) {
@@ -152,19 +153,8 @@ export function Gallery() {
     console.log("changeIndex", index);
   }
 
-  function detailToggle() {
-    if (Content !== `display:none`) {
-      console.log("반응확인");
-      Right.lastElementChild = styled.p`
-        background-color: yellow;
-        display: none;
-      `;
-    } else {
-      console.log("반응확인22");
-      sculptureList[index].description = styled.p`
-        display: block;
-      `;
-    }
+  function onClick() {
+    setDetailOn(!detailON);
   }
   return (
     <>
@@ -190,8 +180,10 @@ export function Gallery() {
             />
           </Img>
           <Right>
-            <button onClick={detailToggle}>Detail</button>
-            <Content>{sculptureList[index].description}</Content>
+            <button onClick={onClick}>Detail</button>
+            {detailON ? (
+              <Content>{sculptureList[index].description}</Content>
+            ) : null}
           </Right>
         </Box>
       </Container>
