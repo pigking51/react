@@ -4,13 +4,19 @@
 // import { Test2 } from "./Components/20240722/Test2";
 
 import { createGlobalStyle } from "styled-components";
-import { OpenWeather } from "./Components/20240724/OpenWeather";
+//import { OpenWeather } from "./Components/20240724/OpenWeather";
+// import { MovieShop } from "./Components/MovieShop/MovieShop";
 
 // import { Gallery } from "./Components/20240723/Gallery";
 // import { Home } from "./Components/20240724/Home";
 
 //import { CounterState } from "./Components/20240723/CounterState";
 //import { ScoreWrapper } from "./Components/20240723/ScoreWrapper";
+
+// import { ResponsivePage } from "./Components/Utils/ResponsivePage";
+// import { ReactRef } from "./Components/Utils/ReactRef";
+
+import { TopDownAction } from "./Components/Unity/TopDownAction";
 
 const GlobalStyle = createGlobalStyle`
 @font-face {
@@ -31,8 +37,11 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <OpenWeather />
-      {/* <Home /> */}
+      {/* <OpenWeather /> */}
+      {/* <MovieShop /> */}
+      {/* <ResponsivePage /> */}
+      {/* <ReactRef /> */}
+      <TopDownAction />
     </>
   );
 }
