@@ -8,12 +8,15 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
+  flex-direction: column;
 `;
 const Card = styled.div`
   width: 500px;
   height: 300px;
-  background: linear-gradient(-65deg, teal, #feb47b);
+  background: ${(props) =>
+    props.$temp >= 20
+      ? "linear-gradient(-65deg, teal, #feb47b)"
+      : "linear-gradient(90deg, #00c6ff, #0072ff)"};
   color: white;
   border-radius: 10px;
   display: grid;
@@ -46,6 +49,34 @@ const Info = styled.div`
   font-size: 1.5rem;
   margin-top: 30px;
 `;
+const SearchBox = styled.div`
+  display: flex;
+  margin-top: 20px;
+`;
+const Input = styled.input`
+  width: 350px;
+`;
+
+const Button = styled.button`
+  background-color: dodgerblue;
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 1.1rem;
+  margin-left: 20px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  &:hover {
+    background-color: blue;
+  }
+  &:active {
+    background-color: darkblue;
+  }
+`;
 
 export function OpenWeather() {
   const API_KEY = "8890a3b18e47d8c9e68beba52ac232d4";
@@ -53,6 +84,7 @@ export function OpenWeather() {
   const [temp, setTemp] = useState(0);
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState("");
+  const [newCityName, setNewCityName] = useState("");
 
   //   useEffect(() => {
   //     setIcon("04d");
@@ -69,11 +101,11 @@ export function OpenWeather() {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`;
-    const cityName = "seoul";
-    const urlCity = `https://api.openweathermap.org/data/2.5/find?q=${cityName}&appid=${API_KEY}&units=metric`;
+    // const cityName = "seoul";
+    // const urlCity = `https://api.openweathermap.org/data/2.5/find?q=${cityName}&appid=${API_KEY}&units=metric`;
     // 1. Axios 사용법(Async~await)
     try {
-      const response = await axios.get(urlCity);
+      const response = await axios.get(url);
       const data = response.data;
       console.log(data);
       setCity(data.name);
@@ -81,7 +113,7 @@ export function OpenWeather() {
       setIcon(data.weather[0].icon);
       setWeather(data.weather[0].main);
     } catch (error) {
-      console.log("Async-awiat에 따른 오류");
+      console.log("Async-awiat에 따른 오류", error);
     }
     // 장점: callback 없음
 
@@ -127,10 +159,25 @@ export function OpenWeather() {
     alert("현재 위치정보를 찾을 수 없습니다.");
   }
 
+  async function getWeatherByCityName() {
+    const urlCity = `https://api.openweathermap.org/data/2.5/find?q=${newCityName}&appid=${API_KEY}&units=metric`;
+    try {
+      const response = await axios.get(urlCity);
+      const data = response.data.list[0];
+      console.log(data);
+      setCity(data.name);
+      setTemp(parseInt(data.main.temp));
+      setIcon(data.weather[0].icon);
+      setWeather(data.weather[0].main);
+    } catch (error) {
+      console.log("요청이 실패했습니다.", error);
+    }
+  }
+
   return (
     <>
       <Container>
-        <Card>
+        <Card $temp={temp}>
           <Icon>
             <img src={`https://openweathermap.org/img/wn/${icon}@2x.png`} />
           </Icon>
@@ -143,6 +190,16 @@ export function OpenWeather() {
             <Info>{weather}</Info>
           </Weather>
         </Card>
+        <SearchBox>
+          <Input
+            placeholder="도시 이름을 영어로 입력해주세요"
+            onChange={(e) => {
+              setNewCityName(e.target.value);
+            }}
+            value={newCityName}
+          />
+          <Button onClick={getWeatherByCityName}>Search</Button>
+        </SearchBox>
       </Container>
     </>
   );
